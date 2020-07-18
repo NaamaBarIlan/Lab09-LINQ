@@ -14,8 +14,9 @@ namespace Lab09_LINQ
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Welcome to LINQ in Manhattan!");
             OutputAll();
+            FilterData();
         }
 
         static public Root DeserializeJson()
@@ -24,14 +25,14 @@ namespace Lab09_LINQ
 
             // From the newtonsoft docs:
             // Product deserializedProduct = JsonConvert.DeserializeObject<Product>(output);
-            JsonData = JsonConvert.DeserializeObject<Root>(rawData);
+            Root JsonData = JsonConvert.DeserializeObject<Root>(rawData);
 
             return JsonData;
         }
 
         static public void OutputAll()
         {
-            JsonData = DeserializeJson();
+            Root JsonData = DeserializeJson();
             int counter = 1;
 
             Console.WriteLine("All of the neighborhoods in the data list:");
@@ -40,25 +41,34 @@ namespace Lab09_LINQ
                                    select place.properties.neighborhood;
 
 
-            foreach (var item in JsonData.features)
+            foreach (var neighborhood in allNeighborhoods)
             {
-                Console.WriteLine($"{counter}. {item.properties.neighborhood}");
+                Console.WriteLine($"{counter}. {neighborhood}");
                 counter++;
             }
 
         }
 
-        /*
+
         static public void FilterData()
         {
-            JsonData = DeserializeJson();
-            // Filtering
-            /*
-            var filter  = from person in persons
-                          where person.Age > 21
-                          select new { person.FirstName, person.LastName };
+            Root JsonData = DeserializeJson();
+            int counter = 1;
 
-        */
+            Console.WriteLine("All of the neighborhoods that have names:");
+
+
+            var allNeighborhoods = from place in JsonData.features
+                                   where place.properties.neighborhood != ""
+                                   select place.properties.neighborhood;
+
+            foreach (var neighborhood in allNeighborhoods)
+            {
+                Console.WriteLine($"{counter}. {neighborhood}");
+                counter++;
+            }
+
+
         }
- 
+    }
 }
