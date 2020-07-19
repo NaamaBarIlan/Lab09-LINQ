@@ -14,24 +14,41 @@ namespace Lab09_LINQ
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            Console.WriteLine("Welcome to LINQ in Manhattan!");
+ 
             OutputAll();
+            Console.WriteLine();
+            FilterData();
+            Console.WriteLine();
+            RemoveData();
+            Console.WriteLine();
+            ReadFilterAndOutputInOne();
+            Console.WriteLine();
+            OutputAllLinqMethod();
         }
 
+        /// <summary>
+        /// This method brings in data from the external JSON file and deserializes it using the newtonsoft JsonConvert.
+        /// </summary>
+        /// <returns>A root object of converted data in C# format</returns>
         static public Root DeserializeJson()
         {
             string rawData = File.ReadAllText("../../../Data.JSON");
 
             // From the newtonsoft docs:
             // Product deserializedProduct = JsonConvert.DeserializeObject<Product>(output);
-            JsonData = JsonConvert.DeserializeObject<Root>(rawData);
+            Root JsonData = JsonConvert.DeserializeObject<Root>(rawData);
 
             return JsonData;
         }
 
+        /// <summary>
+        /// This method uses the output of the DeserializeJson method and a LINQ Query 
+        /// to output to the console the names of all of the Manhattan neighborhoods in the external JSON file. 
+        /// </summary>
         static public void OutputAll()
         {
-            JsonData = DeserializeJson();
+            Root JsonData = DeserializeJson();
             int counter = 1;
 
             Console.WriteLine("All of the neighborhoods in the data list:");
@@ -39,26 +56,109 @@ namespace Lab09_LINQ
             var allNeighborhoods = from place in JsonData.features
                                    select place.properties.neighborhood;
 
-
-            foreach (var item in JsonData.features)
+            foreach (var neighborhood in allNeighborhoods)
             {
-                Console.WriteLine($"{counter}. {item.properties.neighborhood}");
+                Console.WriteLine($"{counter}. {neighborhood}");
+                counter++;
+            }
+            Console.WriteLine("^ That was all of the neighborhoods in the data list");
+        }
+
+        /// <summary>
+        /// This method uses the output of the DeserializeJson method and a LINQ Query 
+        /// to filter the data and output to the console only the Manhattan neighborhoods
+        /// that have names in the external JSON file.
+        /// </summary>
+        static public void FilterData()
+        {
+            Root JsonData = DeserializeJson();
+            int counter = 1;
+
+            Console.WriteLine("All of the neighborhoods that have names:");
+
+            var allNeighborhoods = from place in JsonData.features
+                                   where place.properties.neighborhood != ""
+                                   select place.properties.neighborhood;
+
+            foreach (var neighborhood in allNeighborhoods)
+            {
+                Console.WriteLine($"{counter}. {neighborhood}");
+                counter++;
+            }
+            Console.WriteLine("^ That was all of the neighborhoods that have names");
+
+        }
+
+        /// <summary>
+        /// This method uses the output of the DeserializeJson method and a LINQ Query 
+        /// to remove any duplicates from the data and output to the console only 
+        /// the unique Manhattan neighborhood in the external JSON file.
+        /// </summary>
+        static public void RemoveData()
+        {
+            Root JsonData = DeserializeJson();
+            int counter = 1;
+
+            Console.WriteLine("Removed duplicates from all of the neighborhoods that have names:");
+
+            var allNeighborhoods = (from place in JsonData.features
+                                   where place.properties.neighborhood != ""
+                                   select place.properties.neighborhood).Distinct();
+
+            foreach (var neighborhood in allNeighborhoods)
+            {
+                Console.WriteLine($"{counter}. {neighborhood}");
+                counter++;
+            }
+            Console.WriteLine("^ That was the filtered data without the duplicates");
+        }
+
+        /// <summary>
+        /// This method uses the output of the DeserializeJson method and a LINQ method call 
+        /// to output to the console only the unique Manhattan neighborhoods
+        /// that have names in the external JSON file.
+        /// </summary>
+        static public void ReadFilterAndOutputInOne()
+        {
+            Root JsonData = DeserializeJson();
+            int counter = 1;
+
+            Console.WriteLine("Consolidated method calls:");
+
+            var allQueries = JsonData.features
+                            .Select(x => new { x.properties.neighborhood })
+                            .Where(x => x.neighborhood != "")
+                            .Distinct();
+
+            foreach (var neighborhood in allQueries)
+            {
+                Console.WriteLine($"{counter}. {neighborhood.neighborhood}");
                 counter++;
             }
 
+            Console.WriteLine("^ That was the consolidated method:");
+
         }
 
-        /*
-        static public void FilterData()
+        /// <summary>
+        /// This method uses the output of the DeserializeJson method and a LINQ method 
+        /// to output to the console the names of all of the Manhattan neighborhoods in the external JSON file. 
+        /// </summary>
+        static public void OutputAllLinqMethod()
         {
-            JsonData = DeserializeJson();
-            // Filtering
-            /*
-            var filter  = from person in persons
-                          where person.Age > 21
-                          select new { person.FirstName, person.LastName };
+            Root JsonData = DeserializeJson();
+            int counter = 1;
 
-        */
+            Console.WriteLine("All of the neighborhoods in the data list (using a LINQ method):");
+
+            var outputAllMethod = JsonData.features.Select(x => new { x.properties.neighborhood });
+
+            foreach (var neighborhood in outputAllMethod)
+            {
+                Console.WriteLine($"{counter}. {neighborhood.neighborhood}");
+                counter++;
+            }
+            Console.WriteLine("^ That was all of the neighborhoods in the data list (using a LINQ method) ");
         }
- 
+    }
 }
