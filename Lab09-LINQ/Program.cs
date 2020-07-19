@@ -108,6 +108,11 @@ namespace Lab09_LINQ
             Console.WriteLine("^ That was the filtered data without the duplicates");
         }
 
+        /// <summary>
+        /// This method uses the output of the DeserializeJson method and a LINQ method call 
+        /// to output to the console only the unique Manhattan neighborhoods
+        /// that have names in the external JSON file.
+        /// </summary>
         static public void ReadFilterAndOutputInOne()
         {
             Root JsonData = DeserializeJson();
