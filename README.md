@@ -44,5 +44,6 @@ Then select and open ```Lab09-LINQ```
 
 ### Change Log
 
+1.1 *Added four new queries and summary notes* 19 Jul 2020
 
 ------------------------------
