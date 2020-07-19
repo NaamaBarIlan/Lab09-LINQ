@@ -17,9 +17,14 @@ namespace Lab09_LINQ
             Console.WriteLine("Welcome to LINQ in Manhattan!");
  
             OutputAll();
+            Console.WriteLine();
             FilterData();
+            Console.WriteLine();
             RemoveData();
+            Console.WriteLine();
             ReadFilterAndOutputInOne();
+            Console.WriteLine();
+            OutputAllLinqMethod();
         }
 
         /// <summary>
@@ -121,9 +126,9 @@ namespace Lab09_LINQ
             Console.WriteLine("Consolidated method calls:");
 
             var allQueries = JsonData.features
-            .Select(x => new { x.properties.neighborhood })
-            .Where(x => x.neighborhood != "")
-            .Distinct();
+                            .Select(x => new { x.properties.neighborhood })
+                            .Where(x => x.neighborhood != "")
+                            .Distinct();
 
             foreach (var neighborhood in allQueries)
             {
@@ -133,6 +138,27 @@ namespace Lab09_LINQ
 
             Console.WriteLine("^ That was the consolidated method:");
 
+        }
+
+        /// <summary>
+        /// This method uses the output of the DeserializeJson method and a LINQ method 
+        /// to output to the console the names of all of the Manhattan neighborhoods in the external JSON file. 
+        /// </summary>
+        static public void OutputAllLinqMethod()
+        {
+            Root JsonData = DeserializeJson();
+            int counter = 1;
+
+            Console.WriteLine("All of the neighborhoods in the data list (using a LINQ method):");
+
+            var outputAllMethod = JsonData.features.Select(x => new { x.properties.neighborhood });
+
+            foreach (var neighborhood in outputAllMethod)
+            {
+                Console.WriteLine($"{counter}. {neighborhood.neighborhood}");
+                counter++;
+            }
+            Console.WriteLine("^ That was all of the neighborhoods in the data list (using a LINQ method) ");
         }
     }
 }
