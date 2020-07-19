@@ -19,6 +19,7 @@ namespace Lab09_LINQ
             OutputAll();
             FilterData();
             RemoveData();
+            ReadFilterAndOutputInOne();
         }
 
         /// <summary>
@@ -107,23 +108,26 @@ namespace Lab09_LINQ
             Console.WriteLine("^ That was the filtered data without the duplicates");
         }
 
-        static public void ReadFilterAndRemove()
+        static public void ReadFilterAndOutputInOne()
         {
             Root JsonData = DeserializeJson();
             int counter = 1;
 
-            Console.WriteLine("Removed duplicates from all of the neighborhoods that have names:");
+            Console.WriteLine("Consolidated method calls:");
 
-            var allNeighborhoods = (from place in JsonData.features
-                                    where place.properties.neighborhood != ""
-                                    select place.properties.neighborhood).Distinct();
+            var allQueries = JsonData.features
+            .Select(x => new { x.properties.neighborhood })
+            .Where(x => x.neighborhood != "")
+            .Distinct();
 
-            foreach (var neighborhood in allNeighborhoods)
+            foreach (var neighborhood in allQueries)
             {
-                Console.WriteLine($"{counter}. {neighborhood}");
+                Console.WriteLine($"{counter}. {neighborhood.neighborhood}");
                 counter++;
             }
-            Console.WriteLine("^ That was the filtered data without the duplicates");
+
+            Console.WriteLine("^ That was the consolidated method:");
+
         }
     }
 }
